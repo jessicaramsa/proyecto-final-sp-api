@@ -1,11 +1,8 @@
-import json
+import os
 from pymongo import MongoClient
-
-def get_db_url():
-    with open("config/config.json", encoding="utf-8") as config_file:
-        return json.load(config_file) or None
+from config.config_json import get_config
 
 def connection():
-    client = MongoClient(get_db_url()["mongoAtlas"])
+    client = MongoClient(os.environ.get("MONGODB_URL") or get_config()["mongoAtlas"])
     db  = client.cfpm
     return db

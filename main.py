@@ -5,7 +5,7 @@ from controllers.note_controller import NoteController
 from controllers.image_controller import ImageController
 
 app = flask.Flask(__name__)
-app.config.from_pyfile("config/config.py")
+app.config.from_pyfile("config/config_flask.py")
 
 @app.route("/", methods=["GET"])
 def home():

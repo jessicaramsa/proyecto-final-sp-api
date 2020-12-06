@@ -1,10 +1,12 @@
-import flask, json, os, hashlib
+import flask, json, os, hashlib, requests
 
 from flask import request, jsonify, current_app, url_for
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
 from database.db_connection import connection
+from config.config_json import get_config
+from config.cloudinary import config_cloudinary
 from models.image import Image
 
 class ImageController:
@@ -30,14 +32,27 @@ class ImageController:
                 count = images.count()
             )
     
+    def upload_cloudinary(self, filename):
+        cloud_name = get_config()["cloudinary"]["cloud_name"] or os.environ.get("CLOUDINARY_CLOUD_NAME")
+        upload_preset = get_config()["cloudinary"]["upload_preset"] or os.environ.get("CLOUDINARY_UPLOAD_PRESET")
+        api = get_config()["cloudinary"]["api"] or os.environ.get("CLOUDINARY_API")
+        upload_url = f"{api}/{cloud_name}/image/upload"
+
+        response = requests.post(
+            upload_url,
+            params={ "upload_preset": upload_preset },
+            files={ "file": filename }
+        )
+        print(response.json())
+        return response.json()["secure_url"]
+
     def create(self, req):
         imageFile = request.files["file"]
         if "files" in req.files or imageFile.filename != "":
             if imageFile and self.allowed_file(imageFile.filename):
-                filename = secure_filename(imageFile.filename)
-                uploadFolder = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+                url = self.upload_cloudinary(imageFile)
+                payload = { "url": url }
 
-                payload = { "url": uploadFolder, "filename": filename }
                 result = connection().images.insert_one(payload)
                 if result.inserted_id:
                     image = connection().images.find({ "_id": ObjectId(result.inserted_id) })
