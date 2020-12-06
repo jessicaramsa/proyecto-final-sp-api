@@ -1,0 +1,12 @@
+[Unit]
+Description=API
+
+[Service]
+User=pi
+Type=eec
+Restart=always
+WorkingDirectory=/home/pi/Proyecto/proyecto-final-sp-api
+ExecStart=/usr/bin/python3 main.py
+
+[Install]
+WantedBy=multi-user.target
