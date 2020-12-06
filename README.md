@@ -17,5 +17,5 @@ You should change the name of the key where your database would be placed.
 Temporaly, it will be using the MongoDB Atlas URL.
 
 # Upload folder
-The upload folder is setting thinking you would place your files in the same server as your API.
-Check `config/config.py` for more information.
+All the files uploaded will be storage in [Cloudinary](cloudinary.com).
+Check `config/cloudinary.py`.
