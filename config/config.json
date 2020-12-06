@@ -1,4 +1,9 @@
 {
     "mongoAtlas": "",
-    "mongo": "mongodb://localhost:27017/"
+    "mongo": "mongodb://localhost:27017/",
+    "cloudinary": {
+        "cloudName": "",
+        "api_key": "",
+        "api_secret": ""
+    }
 }
