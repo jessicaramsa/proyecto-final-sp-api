@@ -47,4 +47,4 @@ def uploaded_file(filename):
 def delete_image():
     return ImageController().delete()
 
-app.run()
+app.run(host="0.0.0.0", port=80)
