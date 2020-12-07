@@ -12,14 +12,20 @@ class NoteController:
             idNote = ObjectId(request.args["id"])
             note = connection().notes.find({ "_id": idNote })
             return jsonify(
-                headers = { "Content-Type": "application/json" },
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 statusCode = 200,
                 data = json.loads(dumps(list(note))),
             )
         else:
             notes = connection().notes.find()
             return jsonify(
-                headers = { "Content-Type": "application/json" },
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 statusCode = 200,
                 data = json.loads(dumps(list(notes))),
                 count = notes.count()
@@ -28,19 +34,26 @@ class NoteController:
     def create(self, form):
         note = {
             "title": request.form.get("title"),
-            "descrition": request.form.get("description")
+            "description": request.form.get("description")
         }
         result = connection().notes.insert_one(note)
         if result.inserted_id:
             note = connection().notes.find({ "_id": ObjectId(result.inserted_id) })
             return jsonify(
-                headers = { "Content-Type": "application/json" },
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 statusCode = 200,
                 data = json.loads(dumps(list(note)))
             )
         else:
             return jsonify(
                 statusCode = 500,
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 error = {
                     "message": "Error creating new note! Try again later."
                 }
@@ -66,13 +79,20 @@ class NoteController:
             if result.modified_count > 0:
                 note = connection().notes.find({ "_id": idNote })
                 return jsonify(
-                    headers = { "Content-Type": "application/json" },
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     statusCode = 200,
                     data = json.loads(dumps(list(note)))
                 )
             else:
                 return jsonify(
                     statusCode = 500,
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     error = {
                         "message": "Error updating note! Try again later."
                     }
@@ -80,6 +100,10 @@ class NoteController:
         else:
             return jsonify(
                 statusCode = 400,
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 error = {
                     message: "Error: No ID field provided. Please specify an id."
                 }
@@ -93,7 +117,10 @@ class NoteController:
             if result.deleted_count > 0:
                 notes = connection().notes.find()
                 return jsonify(
-                    headers = { "Content-Type": "application/json" },
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     statusCode = 200,
                     data = json.loads(dumps(list(notes))),
                     count = notes.count()
@@ -101,6 +128,10 @@ class NoteController:
             else:
                 return jsonify(
                     statusCode = 500,
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     error = {
                         "message": "Error deleting note! Try again later."
                     }
@@ -108,6 +139,10 @@ class NoteController:
         else:
             return jsonify(
                 statusCode = 400,
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 error = {
                     message: "Error: No ID field provided. Please specify an id."
                 }

@@ -19,20 +19,24 @@ class ImageController:
             idImg = ObjectId(request.args["id"])
             image = connection().images.find({ "_id": idImg })
             return jsonify(
-                headers = { "Content-Type": "application/json" },
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 statusCode = 200,
                 data = json.loads(dumps(list(image))),
             )
         else:
             images = connection().images.find()
-            response = jsonify(
-                headers = { "Content-Type": "application/json" },
+            return jsonify(
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 statusCode = 200,
                 data = json.loads(dumps(list(images))),
                 count = images.count()
             )
-            response.headers.add("Access-Controll-Allow-Origin", "*")
-            return response
     
     def upload_cloudinary(self, filename):
         cloud_name = get_config()["cloudinary"]["cloud_name"] or os.environ.get("CLOUDINARY_CLOUD_NAME")
@@ -59,13 +63,20 @@ class ImageController:
                 if result.inserted_id:
                     image = connection().images.find({ "_id": ObjectId(result.inserted_id) })
                     return jsonify(
-                        headers = { "Content-Type": "application/json" },
+                        headers = {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*"
+                        },
                         statusCode = 200,
                         data = json.loads(dumps(list(image)))
                     )
                 else:
                     return jsonify(
                         statusCode = 500,
+                        headers = {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*"
+                        },
                         error = {
                             "message": "Error saving file! Try again later."
                         }
@@ -73,6 +84,10 @@ class ImageController:
             else:
                 return jsonify(
                     statusCode = 400,
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     error = {
                         "message": "File not supported!"
                     }
@@ -80,6 +95,10 @@ class ImageController:
         else:
             return jsonify(
                 statusCode = 400,
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 error = {
                     "message": "Select at least one file!"
                 }
@@ -93,7 +112,10 @@ class ImageController:
             if result.deleted_count > 0:
                 images = connection().images.find()
                 return jsonify(
-                    headers = { "Content-Type": "application/json" },
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     statusCode = 200,
                     data = json.loads(dumps(list(images))),
                     count = images.count()
@@ -101,6 +123,10 @@ class ImageController:
             else:
                 return jsonify(
                     statusCode = 500,
+                    headers = {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     error = {
                         "message": "Error deleting image! Try again later."
                     }
@@ -108,6 +134,10 @@ class ImageController:
         else:
             return jsonify(
                 statusCode = 400,
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 error = {
                     message: "Error: No ID field provided. Please specify an id."
                 }

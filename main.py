@@ -1,10 +1,12 @@
 import flask
 import json
 from flask import request, jsonify, send_from_directory
+from flask_cors import CORS
 from controllers.note_controller import NoteController
 from controllers.image_controller import ImageController
 
 app = flask.Flask(__name__)
+cors = CORS(app, resources={ r"/api/*": { "origins": "*" } })
 app.config.from_pyfile("config/config_flask.py")
 
 @app.route("/", methods=["GET"])
