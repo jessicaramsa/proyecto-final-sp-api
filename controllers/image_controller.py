@@ -25,12 +25,14 @@ class ImageController:
             )
         else:
             images = connection().images.find()
-            return jsonify(
+            response = jsonify(
                 headers = { "Content-Type": "application/json" },
                 statusCode = 200,
                 data = json.loads(dumps(list(images))),
                 count = images.count()
             )
+            response.headers.add("Access-Controll-Allow-Origin", "*")
+            return response
     
     def upload_cloudinary(self, filename):
         cloud_name = get_config()["cloudinary"]["cloud_name"] or os.environ.get("CLOUDINARY_CLOUD_NAME")
